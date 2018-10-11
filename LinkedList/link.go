@@ -22,7 +22,15 @@ func (list *List) add(i int, name string) bool {
 }
 
 func (list *List) get(i int) *List {
-	for {
+		if list.Id == i {
+			return list
+		}
+		if list.Next == nil {
+			return &List{}
+		}
+		return list.Next.get(i)
+
+	/*	for {
 		//fmt.Println(list.Id)
 		if list.Id == i {
 			return list
@@ -31,7 +39,7 @@ func (list *List) get(i int) *List {
 			return &List{}
 		}
 		list = list.Next
-	}
+	}*/
 }
 
 func newList(id int, name string) *List {
