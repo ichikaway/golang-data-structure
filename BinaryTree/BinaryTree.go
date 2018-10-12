@@ -35,9 +35,31 @@ func (node *Node) add (key int, val string) {
 	}
 }
 
+func (node *Node) get (key int) string {
+	if node.Key == key {
+		return node.Val
+	} else if node.Key > key {
+		if node.left == nil {
+			return ""
+		} else {
+			return node.left.get(key)
+		}
+	} else if node.Key < key {
+		if node.right == nil {
+			return ""
+		} else {
+			return node.right.get(key)
+		}
+	}
+	return ""
+}
 
 func (tree *BinTree) add (key int, val string) {
 	tree.root.add(key, val)
+}
+
+func (tree *BinTree) get (key int) string {
+	return tree.root.get(key)
 }
 
 func createNode(key int, val string) *Node {
@@ -59,13 +81,17 @@ func main() {
 	bintree.add(5, "555")
 	bintree.add(9, "999")
 	//fmt.Println("eabcd" < "def")
+
+	fmt.Println("val:", bintree.get(9))
+	fmt.Println("val:", bintree.get(100))
+/*
 	var_dump(bintree.root)
 	var_dump(bintree.root.left)
 	var_dump(bintree.root.left.left)
 	var_dump(bintree.root.left.left.left)
 	var_dump(bintree.root.right)
 	var_dump(bintree.root.right.left)
-	var_dump(bintree.root.right.right)
+	var_dump(bintree.root.right.right)*/
 }
 
 
