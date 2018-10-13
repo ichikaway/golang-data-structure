@@ -15,7 +15,7 @@ type List struct {
 
 type HashTable struct {
 	count int
-	size  int
+	binsize  int
 	array [BIN_SIZE]List
 }
 
@@ -31,13 +31,13 @@ func hashInt(s string) int {
 /**
 HashMapの配列のIndexを求める
  */
-func makeIndex(s string) int {
+func makeIndex(s string, binsize int) int {
 	i := hashInt(s)
-	return i % BIN_SIZE
+	return i % binsize
 }
 
 func newHashMap() *HashTable {
-	return &HashTable{count: 0, size: BIN_SIZE}
+	return &HashTable{count: 0, binsize: BIN_SIZE}
 }
 
 /**
@@ -79,7 +79,7 @@ HashTableからkeyを基準に値を取得する
 Hashの配列からindexを求めて、その中の連結リストから該当keyを探索
  */
 func (table *HashTable) get(key string) string {
-	i := makeIndex(key)
+	i := makeIndex(key, table.binsize)
 	if table.array[i].Key == "" {
 		return ""
 	} else {
@@ -96,7 +96,7 @@ func (table *HashTable) add(key string, val string) {
 	if key == "" {
 		panic("Key needs not empty")
 	}
-	i := makeIndex(key)
+	i := makeIndex(key, table.binsize)
 	table.count++
 	//fmt.Println(i)
 	//fmt.Println(table.array[i])
