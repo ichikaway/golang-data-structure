@@ -98,6 +98,11 @@ func (table *HashTable) add(key string, val string) {
 	}
 	i := makeIndex(key, table.binsize)
 	table.count++
+
+	if table.count > table.binsize {
+		*table = table.rehash()
+	}
+
 	//fmt.Println(i)
 	//fmt.Println(table.array[i])
 	if table.array[i].Key == "" {
@@ -105,6 +110,19 @@ func (table *HashTable) add(key string, val string) {
 	} else {
 		table.array[i].add(key, val)
 	}
+}
+
+/**
+新しいHashMapを作って、既存のデータをそちらに移動させる
+そに際に、配列のサイズを2倍にする
+ */
+func (table *HashTable) rehash() HashTable{
+	newTable := newHashMap()
+	newTable.binsize = table.binsize * 2
+
+	// table.arrayをeachで全ての値を取得し、新しいnewTable.arrayにaddし直す
+
+	return *newTable
 }
 
 func main() {
@@ -121,6 +139,7 @@ func main() {
 
 	//fmt.Println(hashMap)
 	var_dump(hashMap.array[3].Next)
+	var_dump(hashMap)
 	//var_dump(hashMap)
 
 }
