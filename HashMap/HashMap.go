@@ -16,7 +16,7 @@ type List struct {
 type HashTable struct {
 	count int
 	binsize  int
-	array [BIN_SIZE]List
+	array []List
 }
 
 /**
@@ -36,8 +36,9 @@ func makeIndex(s string, binsize int) int {
 	return i % binsize
 }
 
-func newHashMap() *HashTable {
-	return &HashTable{count: 0, binsize: BIN_SIZE}
+func newHashMap(binsize int) *HashTable {
+	list := make([]List, binsize)
+	return &HashTable{count: 0, binsize: binsize, array: list }
 }
 
 /**
@@ -127,7 +128,7 @@ func (table *HashTable) rehash() HashTable{
 
 func main() {
 
-	hashMap := newHashMap()
+	hashMap := newHashMap(BIN_SIZE)
 	hashMap.add("ichi", "kawa")
 	hashMap.add("ichi", "kawa2")
 	hashMap.add("yasu", "shi")
