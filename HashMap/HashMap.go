@@ -98,7 +98,6 @@ func (table *HashTable) add(key string, val string) {
 		panic("Key needs not empty")
 	}
 	i := makeIndex(key, table.binsize)
-	table.count++
 
 	if table.count > table.binsize {
 		*table = table.rehash()
@@ -106,6 +105,7 @@ func (table *HashTable) add(key string, val string) {
 
 	//fmt.Println(i)
 	//fmt.Println(table.array[i])
+	table.count++
 	if table.array[i].Key == "" {
 		table.array[i] = List{Key: key, Val: val}
 	} else {
@@ -118,23 +118,45 @@ func (table *HashTable) add(key string, val string) {
 そに際に、配列のサイズを2倍にする
  */
 func (table *HashTable) rehash() HashTable{
-	newTable := newHashMap()
-	newTable.binsize = table.binsize * 2
+	newBinsize := table.binsize * 2
+	newTable := newHashMap(newBinsize)
 
-	// table.arrayをeachで全ての値を取得し、新しいnewTable.arrayにaddし直す
+	var_dump(table)
 
+	size := len(table.array)
+	for i := 0; i < size; i++ {
+		if table.array[i].Key == "" {
+			continue
+		}
+		newTable.add(table.array[i].Key, table.array[i].Val)
+
+		var_dump(table.array[i].Next)
+		var list *List = table.array[i].Next
+		for {
+			if list == nil {
+				break
+			}
+			newTable.add(list.Key, list.Val)
+			list = list.Next
+		}
+	}
+	var_dump(newTable)
 	return *newTable
 }
+
+
+
 
 func main() {
 
 	hashMap := newHashMap(BIN_SIZE)
 	hashMap.add("ichi", "kawa")
-	hashMap.add("ichi", "kawa2")
+	hashMap.add("ichi2", "kawa2")
 	hashMap.add("yasu", "shi")
 	hashMap.add("111", "shi1")
 	hashMap.add("222", "shi2")
 	hashMap.add("333", "shi3")
+	hashMap.add("444", "shi4")
 
 	fmt.Println(hashMap.get("333"))
 
