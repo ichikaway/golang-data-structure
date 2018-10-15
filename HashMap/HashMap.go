@@ -16,7 +16,7 @@ type List struct {
 type HashTable struct {
 	count int
 	binsize  int
-	array []List
+	array []*List
 }
 
 /**
@@ -37,7 +37,7 @@ func makeIndex(s string, binsize int) int {
 }
 
 func newHashMap(binsize int) *HashTable {
-	list := make([]List, binsize)
+	list := make([]*List, binsize)
 	return &HashTable{count: 0, binsize: binsize, array: list }
 }
 
@@ -64,7 +64,7 @@ HashMapの配列の中にある連結リストから、keyに該当する値を�
  */
 func (list *List) get(key string) string {
 	for {
-		fmt.Println("key:", list.Key)
+		//fmt.Println("key:", list.Key)
 		if list.Key == key {
 			return list.Val
 		}
@@ -81,7 +81,7 @@ Hashの配列からindexを求めて、その中の連結リストから該当ke
  */
 func (table *HashTable) get(key string) string {
 	i := makeIndex(key, table.binsize)
-	if table.array[i].Key == "" {
+	if table.array[i] == nil {
 		return ""
 	} else {
 		return table.array[i].get(key)
@@ -106,8 +106,8 @@ func (table *HashTable) add(key string, val string) {
 	//fmt.Println(i)
 	//fmt.Println(table.array[i])
 	table.count++
-	if table.array[i].Key == "" {
-		table.array[i] = List{Key: key, Val: val}
+	if table.array[i] == nil {
+		table.array[i] = &List{Key: key, Val: val}
 	} else {
 		table.array[i].add(key, val)
 	}
@@ -118,19 +118,20 @@ func (table *HashTable) add(key string, val string) {
 そに際に、配列のサイズを2倍にする
  */
 func (table *HashTable) rehash() HashTable{
+	fmt.Println("------ Rehash() -------------")
 	newBinsize := table.binsize * 2
 	newTable := newHashMap(newBinsize)
 
-	var_dump(table)
+	//var_dump(table)
 
 	size := len(table.array)
 	for i := 0; i < size; i++ {
-		if table.array[i].Key == "" {
+		if table.array[i] == nil {
 			continue
 		}
 		newTable.add(table.array[i].Key, table.array[i].Val)
 
-		var_dump(table.array[i].Next)
+		//var_dump(table.array[i].Next)
 		var list *List = table.array[i].Next
 		for {
 			if list == nil {
@@ -140,7 +141,7 @@ func (table *HashTable) rehash() HashTable{
 			list = list.Next
 		}
 	}
-	var_dump(newTable)
+	//var_dump(newTable)
 	return *newTable
 }
 
@@ -156,12 +157,13 @@ func main() {
 	hashMap.add("111", "shi1")
 	hashMap.add("222", "shi2")
 	hashMap.add("333", "shi3")
+	var_dump(hashMap.array[3].Next)
 	hashMap.add("444", "shi4")
 
 	fmt.Println(hashMap.get("333"))
 
 	//fmt.Println(hashMap)
-	var_dump(hashMap.array[3].Next)
+	var_dump(hashMap.array[3].Next) //rehashのためindexの位置が変わり、元のindexの先の値はnilになる
 	var_dump(hashMap)
 	//var_dump(hashMap)
 
