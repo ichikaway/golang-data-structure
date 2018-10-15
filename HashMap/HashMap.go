@@ -126,19 +126,15 @@ func (table *HashTable) rehash() HashTable{
 
 	size := len(table.array)
 	for i := 0; i < size; i++ {
-		if table.array[i] == nil {
-			continue
-		}
-		newTable.add(table.array[i].Key, table.array[i].Val)
-
-		//var_dump(table.array[i].Next)
-		var list *List = table.array[i].Next
+		var list *List = table.array[i]
 		for {
 			if list == nil {
 				break
 			}
 			newTable.add(list.Key, list.Val)
+			var_dump(list)
 			list = list.Next
+			//var_dump(list)
 		}
 	}
 	//var_dump(newTable)
