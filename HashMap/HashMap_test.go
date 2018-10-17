@@ -32,17 +32,17 @@ func TestRehash(t *testing.T) {
 	hashMap := newHashMap(5)
 	hashMap.add("ichi", "kawa")
 	hashMap.add("ichi2", "kawa2")
-	size1 := hashMap.binsize
+	size1 := len(hashMap.array)
 	count1 := hashMap.count
 	hashMap.add("yasu", "shi")
 	hashMap.add("111", "shi1")
 	hashMap.add("222", "shi2")
 	hashMap.add("333", "shi3")
 	hashMap.add("444", "shi4")
-	size2 := hashMap.binsize
+	size2 := len(hashMap.array)
 	hashMap.add("555", "shi5")
 	hashMap.add("666", "shi6")
-	size3 := hashMap.binsize
+	size3 := len(hashMap.array)
 	count2 := hashMap.count
 
 
